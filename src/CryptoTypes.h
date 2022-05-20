@@ -4,32 +4,28 @@
 
 #pragma once
 
-#include <cstdint>
+#include <stdint.h>
 
-namespace Crypto {
-
-struct Hash {
+typedef struct Hash {
   uint8_t data[32];
-};
+} Hash;
 
-struct PublicKey {
+typedef struct PublicKey {
   uint8_t data[32];
-};
+} PublicKey;
 
-struct SecretKey {
+typedef struct SecretKey {
   uint8_t data[32];
-};
+} SecretKey;
 
-struct KeyDerivation {
+typedef struct KeyDerivation {
   uint8_t data[32];
-};
+} KeyDerivation;
 
-struct KeyImage {
+typedef struct KeyImage {
   uint8_t data[32];
-};
+} KeyImage;
 
-struct Signature {
+typedef struct Signature {
   uint8_t data[64];
-};
-
-}
+} Signature;
