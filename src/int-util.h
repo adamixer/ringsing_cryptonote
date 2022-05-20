@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <sys/param.h>
+#include <stdio.h>
 
 #if defined(_MSC_VER)
 #include <stdlib.h>
@@ -205,3 +206,23 @@ static_assert(false, "BYTE_ORDER is undefined. Perhaps, GNU extensions are not e
 #define memcpy_swap64be memcpy_ident64
 #define memcpy_swap64le memcpy_swap64
 #endif
+
+static inline void hexprint(const unsigned char *bytes, size_t length)
+{
+  for (int i = 0; i < length; i++)
+    printf("%02X", (int)bytes[i]);
+  printf("\n");
+}
+
+static inline bool array_cmp(const uint8_t *a1, const uint8_t *a2, size_t l)
+{
+  for (int i = 0; i < l; i++)
+    if (a1[i] != a2[i])
+    {
+      printf("diff array: \n");
+      hexprint(a1, l);
+      hexprint(a2, l);
+      return 0;
+    }
+  return 1;
+}
