@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
   char line[MAX_LENGTH];
   int line_cnt = 0;
   int fail_cnt = 0;
+  int ignore_cnt = 0;
   while (fgets(line, MAX_LENGTH, fp))
   {
     line_cnt++;
@@ -151,8 +152,12 @@ int main(int argc, char *argv[])
       generate_ring_signature(&h, &i, pkptrs, pk_cnt, &sk, sk_idx, sig);
       check(line_cnt, &fail_cnt, array_cmp((const unsigned char *)sig, (const unsigned char *)sig_exp, pk_cnt * sizeof(Signature)));
     }
+    else
+    {
+      ignore_cnt++;
+    }
   }
-  printf("ran %d test, fail %d\n", line_cnt, fail_cnt);
+  printf("ran %d test, ignore %d, fail %d\n", line_cnt, ignore_cnt, fail_cnt);
 
   fclose(fp);
 
