@@ -50,7 +50,7 @@ enum {
   SLOW_HASH_CONTEXT_SIZE = 2097552
 };
 
-void cn_fast_hash(const void *data, size_t length, char *hash);
+void cn_fast_hash(const void *data, size_t length, uint8_t *hash);
 
 void cn_slow_hash_f(void *, const void *, size_t, void *);
 

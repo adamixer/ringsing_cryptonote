@@ -28,7 +28,7 @@
 
   void generate_keys(PublicKey *pub, SecretKey *sec) {
     ge_p3 point;
-    random_scalar(sec);
+    random_scalar((EllipticCurveScalar *)sec);
     ge_scalarmult_base(&point, sec->data);
     ge_p3_tobytes(pub->data, &point);
   }
@@ -85,7 +85,7 @@
       KeyImage t3;
       assert(sc_check(sec->data) == 0);
       ge_scalarmult_base(&t, sec->data);
-      ge_p3_tobytes(&t2, &t);
+      ge_p3_tobytes(t2.data, &t);
       assert(array_cmp(pubs[sec_index]->data, t2.data, 32));
       generate_key_image(pubs[sec_index], sec, &t3);
       assert(array_cmp(image->data, t3.data, 32));
@@ -107,21 +107,21 @@
       if (i == sec_index) {
         random_scalar(&k);
         ge_scalarmult_base(&tmp3, k.data);
-        ge_p3_tobytes(&buf->ab[i].a, &tmp3);
+        ge_p3_tobytes(buf->ab[i].a.data, &tmp3);
         hash_to_ec(pubs[i], &tmp3);
         ge_scalarmult(&tmp2, k.data, &tmp3);
-        ge_tobytes(&buf->ab[i].b, &tmp2);
+        ge_tobytes(buf->ab[i].b.data, &tmp2);
       } else {
-        random_scalar(sig[i].data);
-        random_scalar(sig[i].data + 32);
-        if (ge_frombytes_vartime(&tmp3, pubs[i]) != 0) {
+        random_scalar((EllipticCurveScalar *)(sig[i].data));
+        random_scalar((EllipticCurveScalar *)(sig[i].data + 32));
+        if (ge_frombytes_vartime(&tmp3, pubs[i]->data) != 0) {
           abort();
         }
         ge_double_scalarmult_base_vartime(&tmp2, sig[i].data, &tmp3, sig[i].data + 32);
-        ge_tobytes(&buf->ab[i].a, &tmp2);
+        ge_tobytes(buf->ab[i].a.data, &tmp2);
         hash_to_ec(pubs[i], &tmp3);
         ge_double_scalarmult_precomp_vartime(&tmp2, sig[i].data + 32, &tmp3, sig[i].data, image_pre);
-        ge_tobytes(&buf->ab[i].b, &tmp2);
+        ge_tobytes(buf->ab[i].b.data, &tmp2);
         sc_add(sum.data, sum.data, sig[i].data);
       }
     }
